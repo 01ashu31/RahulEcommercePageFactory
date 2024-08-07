@@ -57,13 +57,6 @@ public class SubmitOrderTest extends BaseTest {
 		Assert.assertTrue(ordersPage.verifyOrderDisplay(productName));
 	}
 	
-	public String getScreenShot(String testCaseName) throws IOException {
-		TakesScreenshot ts=(TakesScreenshot)driver;
-		File source= ts.getScreenshotAs(OutputType.FILE);
-		File dest= new File(System.getProperty("usr.dir")+ "//reports//" + testCaseName + ".png");
-		FileUtils.copyFile(source, dest);
-		return System.getProperty("usr.dir")+ "//reports//" + testCaseName + ".png";
-	}
 
 	@DataProvider
 	public Object[][] getData() throws IOException {

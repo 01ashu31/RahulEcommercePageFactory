@@ -9,6 +9,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.sun.net.httpserver.Authenticator.Retry;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 import rahuylshettyecommerce.pageobjects.CartPage;
@@ -20,7 +22,7 @@ import rahuylshettyecommerce.testcomponenent.BaseTest;
 
 public class ErrorValidationTest extends BaseTest{
 	
-	@Test	(groups={"ErrorHanling"})
+	@Test(groups={"ErrorHanling"}, retryAnalyzer= Retry.class)
 	public void submitOrder() throws IOException, InterruptedException {
 	String productName="ZARA COAT 3";
 	

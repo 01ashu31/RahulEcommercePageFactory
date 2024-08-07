@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -34,7 +36,8 @@ public class BaseTest {
 		FileInputStream fis = new FileInputStream(System.getProperty("user.dir")
 				+ "//src//main//java//rahuylshettyecommerce//resources//GlobalData.properties");
 		prop.load(fis);
-		String browserName = prop.getProperty("browser");
+		String browserName=System.getProperty("browser")!=null? System.getProperty("browser") : prop.getProperty("browser");
+//		String browserName = prop.getProperty("browser");
 
 		if (browserName.equalsIgnoreCase("chrome")) {
 			WebDriverManager.chromedriver().setup();
@@ -53,30 +56,39 @@ public class BaseTest {
 		return driver;
 
 	}
-	
+
 	public List<HashMap<String, String>> getJsonDataToMap(String filePath) throws IOException {
 		// reading json to string
-		String jsonContent=FileUtils.readFileToString(new File(filePath),StandardCharsets.UTF_8);
-		
-		//string to hasmap, use Jackson databind
-		
-		ObjectMapper mapper= new ObjectMapper();
-		List<HashMap<String,String>> data= mapper.readValue(jsonContent, new TypeReference<List<HashMap<String, String>>>(){
-			
-		});
+		String jsonContent = FileUtils.readFileToString(new File(filePath), StandardCharsets.UTF_8);
+
+		// string to hasmap, use Jackson databind
+
+		ObjectMapper mapper = new ObjectMapper();
+		List<HashMap<String, String>> data = mapper.readValue(jsonContent,
+				new TypeReference<List<HashMap<String, String>>>() {
+
+				});
 		return data;
 	}
-	
-	@BeforeMethod (alwaysRun= true)
+
+	public String getScreenShot(String testCaseName, WebDriver driver) throws IOException {
+		TakesScreenshot ts = (TakesScreenshot) driver;
+		File source = ts.getScreenshotAs(OutputType.FILE);
+		File dest = new File(System.getProperty("usr.dir") + "//reports//" + testCaseName + ".png");
+		FileUtils.copyFile(source, dest);
+		return System.getProperty("usr.dir") + "//reports//" + testCaseName + ".png";
+	}
+
+	@BeforeMethod(alwaysRun = true)
 	public LoginPage launchApplication() throws IOException {
-		driver= initializeDriver();
-		loginPage=new LoginPage(driver);
+		driver = initializeDriver();
+		loginPage = new LoginPage(driver);
 		loginPage.goTo();
 		return loginPage;
-		
+
 	}
-	
-	@AfterMethod (alwaysRun= true)
+
+	@AfterMethod(alwaysRun = true)
 	public void tearDown() {
 		driver.close();
 	}
